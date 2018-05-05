@@ -56,13 +56,7 @@ var initDb = function(callback) {
   });
 };
 
-app.get('/', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-
+app.get('/exception', function (req, res) {
   (function() {
       try{
           throw new Error();
@@ -70,6 +64,15 @@ app.get('/', function (req, res) {
           console.log(e);
       }
   })();
+  res.status(500).send('Something bad happened!');
+})
+
+app.get('/', function (req, res) {
+  // try to initialize the db on every request if it's not already
+  // initialized.
+  if (!db) {
+    initDb(function(err){});
+  }
 
   if (db) {
     var col = db.collection('counts');
